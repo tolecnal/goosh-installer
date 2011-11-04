@@ -30,6 +30,14 @@ YUIBIN="/usr/bin/yui-compressor"
 # Pre flight checks
 #
 
+if [ -z "$EDITOR" ]; then
+    echo -e "ERROR: you don't seem to have \$EDITOR set."
+    echo -e "---> Please set this before proceeding!"
+    echo -e "     EDITOR=/path/to/editor"
+    echo -e "     export EDITOR"
+    exit 1
+fi
+
 echo -e "Checking for apt-get binary..."
 if [ ! -f $APTBIN ]; then
     echo -e "ERROR: apt-get binary not found. Please check your paths!"
@@ -92,5 +100,6 @@ if [ ! -d $HOME"/goosh/out" ]; then
         echo -e "---> directory created"
     fi
 fi
+
 
 exit 0
