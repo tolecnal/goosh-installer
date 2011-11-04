@@ -1,7 +1,7 @@
 GOOSH INSTALLER
 =====
 
-*Remember that this is an unoffical installer of goosh. Use at your own risk! But if you find any bugs, please let me know!
+*Remember that this is an unoffical installer of goosh. Use at your own risk! But if you find any bugs, please let me know!*
 
 Script to install and configure Goosh, the Google terminal like web
 application. Clones the current version of Goosh into ~/goosh, where
@@ -21,9 +21,9 @@ No known bugs. But if you find one, please report them. Patches welcome! :)
 
 ## INSTALLATION
 
-wget "https://raw.github.com/tolecnal/goosh-installer/master/goosh.sh" to your home directory
-chmod u+x goosh.sh
-./goosh.sh
+* wget "https://raw.github.com/tolecnal/goosh-installer/master/goosh.sh" to your home directory
+* chmod u+x goosh.sh
+* ./goosh.sh
 
 Then follow the on screen instructions
 
