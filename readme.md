@@ -27,6 +27,10 @@ No known bugs. But if you find one, please report them. Patches welcome! :)
 
 Then follow the on screen instructions
 
+## CREDITS
+
+Thanks to Sesse (Steinar H. Gunderson) for invaluable BASH help.
+
 ## ABOUT THE AUTHOR
 
 Author: Jostein Elvaker Haande <tolecnal@tolecnal.net>
