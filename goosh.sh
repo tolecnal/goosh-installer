@@ -88,7 +88,7 @@ if [ -d $HOME"/goosh" ]; then
 fi
 
 # CLONE THE REPO
-CMD=($GITBIN clone $GITURL)
+CMD=($GITBIN clone $GITURL $HOME/goosh)
 "${CMD[@]}"
 
 if (( $? )) ; then
@@ -144,12 +144,16 @@ if (( $? )) ; then
     exit 1
 fi
 
-if [ -f "$HOME/goosh/index.php"]; then
+if [ -f "$HOME/goosh/index.php" ]; then
     echo -e "ERROR: there's already a index.php file, have we built this before?"
     exit 1
 fi
 
-print <<EOF > "$HOME/goosh/index.php"
+#
+# Apply the HEADER to index.php
+#
+
+cat > "$HOME/goosh/index.php" << EOF
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
@@ -199,9 +203,18 @@ img { border: none; }
 */
 EOF
 
-cat "$HOME/goosh/out/goosh.js" >> "$HOME/goosh/index.php"
+#
+# Apply the compressed javascript code to index.php
+#
 
-print <<EOF >> "$HOME/goosh/index.php"
+cat "$HOME/goosh/out/goosh.js" >> "$HOME/goosh/index.php"
+echo -e "\n" >> "$HOME/goosh/index.php"
+
+#
+# Apply the FOOTER to index.php
+#
+
+cat >> "$HOME/goosh/index.php" <<EOF
 </script>
 <meta name="description" content="goosh is a google-interface that behaves similar to a unix-shell."/>
 <meta name="keywords" content="google, shell, google shell, commandline, cli, bash, interface, ajax, api, unix, search"/>
@@ -210,8 +223,8 @@ print <<EOF >> "$HOME/goosh/index.php"
 <body id="body">
 <div id="output">
 
- 
-<span class='less'>Goosh goosh.org 0.5.0-beta #1 Mon, 23 Jun 08 12:32:53 UTC Google/Ajax</span><br/> 
+
+<span class='less'>Goosh goosh.org 0.5.0-beta #1 Mon, 23 Jun 08 12:32:53 UTC Google/Ajax</span><br/>
  <br/>
 <span class='info'>Welcome to goosh.org - the unofficial google shell.</span><br/>
  <br/>
@@ -223,7 +236,7 @@ goosh is powered by <a href='http://code.google.com/apis/ajax/' target='_blank'>
 
 <br/>
 <br/>
-goosh is written by <a href='http://stefan.grothkopp.com/tag/goosh'>Stefan Grothkopp</a> 
+goosh is written by <a href='http://stefan.grothkopp.com/tag/goosh'>Stefan Grothkopp</a>
 <script type="text/javascript">
 // <!--
 var gmail = "gmail.com";
@@ -242,7 +255,7 @@ goosh is <a href='http://code.google.com/p/goosh/' target='_blank'>open source</
 </div>
 <div id="input">
 <form name='f' onsubmit='return false;' class='cmdline' action=''>
-<table class="inputtable"><tr><td><div id='prompt' class='less'></div></td><td class="inputtd"><input id='inputfield' name='q' type='text' class='cmdline' autocomplete='off' value="" /></td></tr></table>
+<table class="inputtable"><tr><td><div id='prompt' class='less'></div></td><td class="inputtd"><input id='inputfield' name='q' type='text' class='cmdline' autocomplete='off' value="" /></td>
 </form>
 </div>
 <script type="text/javascript">
@@ -254,6 +267,8 @@ document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.
 </body>
 </html>
 EOF
+
+echo ${HTML_FOOTER[@]} >> "$HOME/goosh/index.php"
 
 echo -e "Done writing the file $HOME/goosh/index.php"
 echo -e "---> To install do the following:"
