@@ -1,8 +1,7 @@
 GOOSH INSTALLER
 =====
 
-* Remember that this is an unoffical installer of goosh. Use at your own
-* risk! But if you find any bugs, please let me know!
+*Remember that this is an unoffical installer of goosh. Use at your own risk! But if you find any bugs, please let me know!
 
 Script to install and configure Goosh, the Google terminal like web
 application. Clones the current version of Goosh into ~/goosh, where
