@@ -29,7 +29,8 @@ Then follow the on screen instructions
 
 ## CREDITS
 
-Thanks to Sesse (Steinar H. Gunderson) for invaluable BASH help.
+* Thanks to Stefan Grothkopp <grothkopp@gmail.com> for making goosh in the first place.
+* Thanks to Steinar H. Gunderson (Sesse) for invaluable BASH help.
 
 ## ABOUT THE AUTHOR
 
