@@ -2,7 +2,7 @@
 #
 # File name: goosh.sh
 # Creation date: 04-11-2011
-# Last modified: Tue 01 Nov 2011 12:58:15 PM CET
+# Last modified: Fri 04 Nov 2011 06:41:59 PM CET
 #
 # Script to install and configure Goosh, the Google terminal like web 
 # application. Clones the current version of Goosh into ~/goosh, where
@@ -10,7 +10,7 @@
 # your web server.
 #
 # Please keep in mind that this script is meant to be run under Debian
-# based distributions, such as Debian itself or Ubuntu or similar.
+# based distributions, such as Debian itself, Ubuntu or similar.
 # 
 # Author: Jostein Elvaker Haande <tolecnal@tolecnal.net>
 # Webpage: http://tolecnal.net
@@ -26,6 +26,9 @@ GITURL="https://github.com/isaacs/goosh"
 
 YUIBIN="/usr/bin/yui-compressor"
 
+GOOSHDIR="$HOME/goosh"
+OUTPUT="$HOME/goosh/index.php"
+
 #
 # Set up functions used in script
 #
@@ -34,20 +37,55 @@ function pause() {
     read -p "$*"
 }
 
+function inquire ()  {
+  echo  -n "$1 [$2/$3]? "
+  read answer
+  finish="-1"
+  while [ "$finish" = '-1' ]
+  do
+    finish="1"
+    if [ "$answer" = '' ];
+    then
+      answer=""
+    else
+      case $answer in
+        y | Y | yes | YES ) 
+            rm -rf "$GOOSHDIR";
+            if (( $? )) ; then
+                    echo -e "";
+                    echo -e "ERROR: couldn't delete the directory $GOOSHDIR -> $2";
+                    echo -e ""
+                    exit 1;
+                else
+                    echo -e "---> deleted the folder $GOOSHDIR";
+                    break;
+                fi;;
+        n | N | no | NO ) echo -e ""; echo -e "ERROR: you chose to abort the installation!"; echo -e ""; exit 1;;
+
+        *) finish="-1";
+           echo -e ""; echo -n "ERROR: Invalid response -- please reenter:"; echo -e "";
+           read answer;;
+       esac
+    fi
+  done
+}
+
 #
 # Pre flight checks
 #
 
 if [ -z "$EDITOR" ]; then
+    echo -e ""
     echo -e "ERROR: you don't seem to have \$EDITOR set."
     echo -e "---> Please set this before proceeding!"
-    echo -e "     EDITOR=/path/to/editor"
-    echo -e "     export EDITOR"
+    echo -e "     export EDITOR=/path/to/editor"
+    echo -e "     i.e: export EDITOR=/usr/bin/vim"
     exit 1
 fi
 
 echo -e "Checking for apt-get binary..."
 if [ ! -f $APTBIN ]; then
+    echo -e ""
     echo -e "ERROR: apt-get binary not found. Please check your paths!"
     exit 1
 else
@@ -56,6 +94,7 @@ fi
 
 echo -e "Checking for git binary..."
 if [ ! -f $GITBIN ]; then
+    echo -e ""
     echo -e "ERROR: git binary not found. Please check your paths!"
     exit 1
 else
@@ -64,12 +103,14 @@ fi
 
 echo -e "Checking for yui-compressor..."
 if [ ! -f $YUIBIN ]; then
+    echo -e ""
     echo -e "ERROR: yui-compressor not found. Installing via apt-get..."
     # SET OPTIONS FOR APT-GET AND RUN IT
     OPTS=(install $APTPACKAGES)
-    CMD=($APTBIN $OPTS)
+    CMD=(sudo $APTBIN ${OPTS[@]})
     "${CMD[@]}"
     if (( $? )) ; then
+        echo -e ""
         echo -e "ERROR: apt-get failed, please check your console output"
     else
         echo -e "--- package 'yui-compressor' installed!"
@@ -82,26 +123,32 @@ fi
 # Let's get down and dirty. Download the source and build it.
 #
 
-if [ -d $HOME"/goosh" ]; then
+if [ -d "$GOOSHDIR" ]; then
+    echo -e ""
     echo -e "ERROR: there seems to be a copy of goosh already cloned via git"
-    exit 1
+    echo -e "To continue, we need to delete this directory"
+    echo -e "Answer Yes to delete directory, or No to exit this installation"
+    echo -e ""
+    inquire "Delete directory? y/n"
 fi
 
 # CLONE THE REPO
-CMD=($GITBIN clone $GITURL $HOME/goosh)
+CMD=($GITBIN clone $GITURL $GOOSHDIR)
 "${CMD[@]}"
 
 if (( $? )) ; then
+    echo -e ""
     echo -e "ERROR: 'git clone' failed, please check your console output"
     exit 1
 else
     echo -e "Sucessfully cloned the git repoistory from $GITURL"
 fi
 
-echo -e "Creating $HOME/goosh/out folder..."
-if [ ! -d $HOME"/goosh/out" ]; then
-    mkdir $HOME"/goosh/out"
+echo -e "Creating $GOOSHDIR/out folder..."
+if [ ! -d "$GOOSHDIR/out" ]; then
+    mkdir "$GOOSHDIR/out"
     if (( $? )) ; then
+        echo -e ""
         echo -e "ERROR: failed to create directory $HOME/goosh/out -> $!"
         exit 1
     else
@@ -121,9 +168,10 @@ pause "Press any key to start editing your config file"
 
 # Start the $EDITOR to edit the config file
 
-CMD=($EDITOR $HOME/goosh/src/config/config.js)
+CMD=($EDITOR $GOOSHDIR/src/config/config.js)
 "${CMD[@]}"
 if (( $? )) ; then
+    echo -e ""
     echo -e "ERROR: failed to edit the config file: $!"
     exit 1
 else
@@ -132,19 +180,22 @@ fi
 
 # Let's build the installation
 
-[ -f "`which php 2>/dev/null`" ] && php $HOME/goosh/src/goosh.js > $HOME/goosh/out/goosh.raw.js
+[ -f "`which php 2>/dev/null`" ] && php "$GOOSHDIR/src/goosh.js" > "$GOOSHDIR/out/goosh.raw.js"
 if (( $? )) ; then
+    echo -e ""
     echo -e "ERROR: php failed to build the javascript file"
     exit 1
 fi
 
-[ -f "`which yui-compressor 2>/dev/null`" ] && yui-compressor $HOME/goosh/out/goosh.raw.js > $HOME/goosh/out/goosh.js
+[ -f "`which yui-compressor 2>/dev/null`" ] && yui-compressor "$GOOSHDIR/out/goosh.raw.js" > "$GOOSHDIR/out/goosh.js"
 if (( $? )) ; then
+    echo -e ""
     echo -e "ERROR: yui-compressed failed to compress the javascript file"
     exit 1
 fi
 
 if [ -f "$HOME/goosh/index.php" ]; then
+    echo -e ""
     echo -e "ERROR: there's already a index.php file, have we built this before?"
     exit 1
 fi
@@ -153,7 +204,7 @@ fi
 # Apply the HEADER to index.php
 #
 
-cat > "$HOME/goosh/index.php" << EOF
+cat > "$OUTPUT" << EOF
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
@@ -207,14 +258,14 @@ EOF
 # Apply the compressed javascript code to index.php
 #
 
-cat "$HOME/goosh/out/goosh.js" >> "$HOME/goosh/index.php"
-echo -e "\n" >> "$HOME/goosh/index.php"
+cat "$GOOSHDIR/out/goosh.js" >> "$OUTPUT"
+echo -e "\n" >> "$OUTPUT"
 
 #
 # Apply the FOOTER to index.php
 #
 
-cat >> "$HOME/goosh/index.php" <<EOF
+cat >> "$OUTPUT" <<EOF
 </script>
 <meta name="description" content="goosh is a google-interface that behaves similar to a unix-shell."/>
 <meta name="keywords" content="google, shell, google shell, commandline, cli, bash, interface, ajax, api, unix, search"/>
@@ -268,12 +319,10 @@ document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.
 </html>
 EOF
 
-echo ${HTML_FOOTER[@]} >> "$HOME/goosh/index.php"
-
-echo -e "Done writing the file $HOME/goosh/index.php"
+echo -e "Done writing the file $GOOSHDIR/index.php"
 echo -e "---> To install do the following:"
 echo -e "     mkdir /var/www/goosh"
-echo -e "     cp $HOME/goosh/index.php /var/www/goosh"
+echo -e "     cp $GOOSHDIR/index.php /var/www/goosh"
 echo -e ""
 echo -e "Then point your browser at http://yourdomain.tld/goosh/"
 echo -e ""
