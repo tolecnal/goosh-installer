@@ -1,5 +1,5 @@
 GOOSH INSTALLER
-=====
+===============
 
 *Remember that this is an unoffical installer of goosh. Use at your own risk! But if you find any bugs, please let me know!*
 
@@ -11,28 +11,33 @@ your web server.
 Please keep in mind that this script is meant to be run under Debian
 based distributions, such as Debian itself, Ubuntu or similar.
 
-## DEPENDENCIES
+DEPENDENCIES
+------------
 
 apache or lighthttpd with a working installation of PHP. Also requires yui-compressor, that should be installed by the installer script if not found.
 
-## BUGS
+BUGS
+----
 
 No known bugs. But if you find one, please report them. Patches welcome! :)
 
-## INSTALLATION
+INSTALLATION
+------------
 
-* wget "https://raw.github.com/tolecnal/goosh-installer/master/goosh.sh" to your home directory
-* chmod u+x goosh.sh
-* ./goosh.sh
+    wget "https://raw.github.com/tolecnal/goosh-installer/master/goosh.sh" (to your home directory)
+    chmod u+x goosh.sh
+    ./goosh.sh
 
 Then follow the on screen instructions
 
-## CREDITS
+CREDITS
+-------
 
 * Thanks to Stefan Grothkopp <grothkopp@gmail.com> for making goosh in the first place.
 * Thanks to Steinar H. Gunderson (Sesse) for invaluable BASH help.
 
-## ABOUT THE AUTHOR
+ABOUT THE AUTHOR
+----------------
 
 Author: Jostein Elvaker Haande <tolecnal@tolecnal.net>
 Webpage: http://tolecnal.net
