@@ -2,7 +2,7 @@
 #
 # File name: goosh.sh
 # Creation date: 04-11-2011
-# Last modified: Fri 04 Nov 2011 06:41:59 PM CET
+# Last modified: Wed 09 Nov 2011 12:32:44 PM CET
 #
 # Script to install and configure Goosh, the Google terminal like web 
 # application. Clones the current version of Goosh into ~/goosh, where
@@ -59,12 +59,21 @@ function inquire ()  {
                 else
                     echo -e "---> deleted the folder $GOOSHDIR";
                     break;
-                fi;;
-        n | N | no | NO ) echo -e ""; echo -e "ERROR: you chose to abort the installation!"; echo -e ""; exit 1;;
-
-        *) finish="-1";
-           echo -e ""; echo -n "ERROR: Invalid response -- please reenter:"; echo -e "";
-           read answer;;
+                fi;
+                ;;
+        n | N | no | NO ) 
+            echo -e ""; 
+            echo -e "ERROR: you chose to abort the installation!";
+            echo -e ""; 
+            exit 1;
+            ;;
+        *) 
+           finish="-1";
+           echo -e "";
+           echo -n "ERROR: Invalid response -- please reenter:";
+           echo -e "";
+           read answer;
+           ;;
        esac
     fi
   done
