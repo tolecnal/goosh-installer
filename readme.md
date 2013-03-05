@@ -14,7 +14,7 @@ based distributions, such as Debian itself, Ubuntu or similar.
 DEPENDENCIES
 ------------
 
-apache or lighthttpd with a working installation of PHP. Also requires yui-compressor, that should be installed by the installer script if not found.
+Apache or lighthttpd with a working installation of PHP. Also requires yui-compressor, that should be installed by the installer script if not found.
 
 BUGS
 ----
